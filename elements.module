@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Implements hook_elements().
@@ -24,7 +23,7 @@ function elements_elements() {
   $types['searchfield'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    '#maxlength' => 255,
+    '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_expand_ahah'),
     '#value_callback' => 'form_type_textfield_value',
@@ -32,6 +31,7 @@ function elements_elements() {
   $types['telfield'] = array(
     '#input' => TRUE,
     '#size' => 20,
+    '#maxlength' => 64,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_expand_ahah'),
     '#value_callback' => 'form_type_textfield_value',
@@ -44,8 +44,6 @@ function elements_elements() {
     '#process' => array('form_expand_ahah'),
     '#value_callback' => 'form_type_textfield_value',
   );
-  // Due to a name conflict with theme_number that already exists in CCK,
-  // this field needs to be named 'numberfield'.
   $types['numberfield'] = array(
     '#input' => TRUE,
     '#process' => array('form_expand_ahah'),
@@ -72,10 +70,6 @@ function elements_elements() {
 function elements_theme() {
   return array(
     'tableselect' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'element_html5' => array(
       'arguments' => array('element' => NULL),
       'file' => 'elements.theme.inc',
     ),
@@ -107,6 +101,35 @@ function elements_theme() {
 }
 
 /**
+ * Return the autocompletion HTML for a form element.
+ *
+ * @param $element
+ *   The renderable element to process for autocompletion.
+ *
+ * @return
+ *   The rendered autocompletion element HTML, or an empty string if the field
+ *   has no autocompletion enabled.
+ */
+function elements_add_autocomplete(&$element) {
+  $output = '';
+
+  if (!empty($element['#autocomplete_path']) && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
+    drupal_add_js('misc/autocomplete.js');
+    $element['#attributes']['class'] .= ' form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'] = 'autocomplete';
+    $output = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  return $output;
+}
+
+/**
  * Element process callback; adds support for the HTML5 placeholder attribute.
  *
  * @param $element
@@ -125,6 +148,33 @@ function form_process_placeholder($element) {
 }
 
 /**
+ * Sets HTML attributes based on element properties.
+ *
+ * This is a backport from the Drupal 7 core function of the same name.
+ *
+ * @param $element
+ *   The renderable element to process.
+ * @parm $map
+ *   An associative array whose keys are element property names and whose
+ *   values are the HTML attribute names to set for corresponding the property;
+ *   e.g., array('#propertyname' => 'attributename'). If both names are
+ *   identical except for the leading '#', then an attribute name value is
+ *   sufficient and no property name needs to be specified.
+ */
+function element_set_attributes(array &$element, array $map) {
+  foreach ($map as $property => $attribute) {
+    // If the key is numeric, the attribute name needs to be taken over.
+    if (is_int($property)) {
+      $property = '#' . $attribute;
+    }
+    // Do not overwrite already existing attributes.
+    if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
+      $element['#attributes'][$attribute] = $element[$property];
+    }
+  }
+}
+
+/**
  * Create the correct amount of checkbox or radio elements to populate the table.
  *
  * @param $element
@@ -134,7 +184,6 @@ function form_process_placeholder($element) {
  *   The processed element.
  */
 function form_process_tableselect($element) {
-
   if ($element['#multiple']) {
     $value = is_array($element['#value']) ? $element['#value'] : array();
   }

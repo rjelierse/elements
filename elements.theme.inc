@@ -96,140 +96,146 @@ function theme_tableselect($element) {
 }
 
 /**
- * Helper function to format an HTML 5 form element.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *
- * @return
- *   A themed HTML string representing the form field.
+ * Wrapper for theming a form element to add field prefix and suffix support.
  */
-function theme_element_html5($element) {
-  $element['#attributes'] = array_merge(array(
-    'type' => substr($element['#type'], 0, -5),
-    'name' => $element['#name'],
-    'id' => $element['#id'],
-    'value' => $element['#value'],
-  ), $element['#attributes']);
-
-  if (!empty($element['#size'])) {
-    $element['#attributes'] += array('size' => $element['#size']);
-  }
-  if (!empty($element['#maxlength'])) {
-    $element['#attributes'] += array('maxlength' => $element['#maxlength']);
-  }
-  if (!empty($element['#placeholder'])) {
-    $element['#attributes'] += array('placeholder' => $element['#placeholder']);
-  }
-
-  $class = array('form-' . $element['#type']);
-  $extra = '';
-  $output = '';
-
-  if ($element['#autocomplete_path'] && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
-    drupal_add_js('misc/autocomplete.js');
-    $class[] = 'form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) .'" disabled="disabled" />';
-  }
-  _form_set_class($element, $class);
-
+function _elements_theme_form_element_wrapper($element, $output) {
   if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">'. $element['#field_prefix'] .'</span> ';
+    $output = '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' . $output;
   }
-
-  $output .= '<input' . drupal_attributes($element['#attributes']) .' />';
 
   if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">'. $element['#field_suffix'] .'</span>';
+    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
   }
 
-  return theme('form_element', $element, $output) . $extra;
+  return theme('form_element', $element, $output);
 }
 
 /**
- * Format an e-mail form field.
+ * Returns HTML for an emailfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #placeholder, #attributes, #autocomplete_path.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_emailfield($element) {
-  return theme_element_html5($element);
+  $element['#attributes']['type'] = 'email';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-text', 'form-email'));
+
+  $extra = elements_add_autocomplete($element);
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+  return $output;
 }
 
 /**
- * Format a search form field.
+ * Returns HTML for a searchfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #placeholder, #attributes, #autocomplete_path.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_searchfield($element) {
-  return theme_element_html5($element);
+  $element['#attributes']['type'] = 'search';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-text', 'form-search'));
+
+  $extra = elements_add_autocomplete($element);
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+  return $output;
 }
 
 /**
- * Format a mail form field.
+ * Returns HTML for a telfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #placeholder, #attributes.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_telfield($element) {
-  return theme_element_html5($element);
+  $element['#attributes']['type'] = 'tel';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-text', 'form-tel'));
+
+  $extra = elements_add_autocomplete($element);
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+  return $output;
 }
 
 /**
- * Format an URL form field.
+ * Returns HTML for an urlfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #placeholder, #attributes, #autocomplete_path.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_urlfield($element) {
-  return theme_element_html5($element);
+  $element['#attributes']['type'] = 'url';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-text', 'form-url'));
+
+  $extra = elements_add_autocomplete($element);
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+  return $output;
 }
 
 /**
- * Format a number form field.
+ * Returns HTML for a numberfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #min, #max, #step, #required, #attributes.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_numberfield($element) {
-  if (isset($element['#min'])) {
-    $element['#attributes']['min'] = $element['#min'];
-  }
-  if (isset($element['#max'])) {
-    $element['#attributes']['max'] = $element['#max'];
-  }
-  if (isset($element['#step'])) {
-    $element['#attributes']['step'] = $element['#step'];
-  }
+  $element['#attributes']['type'] = 'number';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
+  _form_set_class($element, array('form-text', 'form-number'));
 
-  return theme_element_html5($element);
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output);
+  return $output;
 }
 
 /**
- * Format a range form field.
+ * Returns HTML for a rangefield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #min, #max, #step, #required, #attributes.
  *
- * @return
- *   A themed HTML string representing the form field.
+ * @ingroup themeable
  */
 function theme_rangefield($element) {
-  return theme_numberfield($element);
+  $element['#attributes']['type'] = 'range';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
+  _form_set_class($element, array('form-text', 'form-range'));
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  $output = _elements_theme_form_element_wrapper($element, $output);
+  return $output;
 }
