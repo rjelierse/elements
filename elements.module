@@ -109,7 +109,7 @@ function elements_theme() {
  *   The processed element.
  */
 function form_process_placeholder($element) {
-  if (isset($element['#placeholder'])) {
+  if (isset($element['#placeholder']) && !isset($element['#attributes']['placeholder'])) {
     // If the placeholder FAPI property is set, simply add it to the form's
     // attributes so it will be output in the HTML tag.
     $element['#attributes']['placeholder'] = $element['#placeholder'];
@@ -266,6 +266,7 @@ function theme_rangefield($element) {
  *   The processed element.
  */
 function form_process_tableselect($element) {
+
   if ($element['#multiple']) {
     $value = is_array($element['#value']) ? $element['#value'] : array();
   }
@@ -326,22 +327,9 @@ function form_process_tableselect($element) {
 }
 
 /**
- * Format a table with radio buttons or checkboxes.
+ * Returns HTML for a table with radio buttons or checkboxes.
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties and children of
- *     the tableselect element.
- *     Each option in $variables['element']['#options'] can contain an array
- *     keyed by '#attributes' which is added to the row's HTML attributes.
- *     @see theme_table
- *     Properties used: header, options, empty, js_select.
- *
- * @return
- *   A themed HTML string representing the table.
- *
- * Example:
- *
+ * An example of per-row options:
  * @code
  * $options = array();
  * $options[0]['title'] = "A red row"
@@ -354,6 +342,16 @@ function form_process_tableselect($element) {
  * '#title' => 'My Selector'
  * '#options' => $options,
  * );
+ * @endcode
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   tableselect element. Properties used: #header, #options, #empty, and
+ *   #js_select. The #options property is an array of selection options; each
+ *   array element of #options is an array of properties. These properties can
+ *   include #attributes, which is added to the table row's HTML attributes;
+ *   see theme_table().
+ *
  * @ingroup themeable
  */
 function theme_tableselect($element) {
@@ -361,16 +359,16 @@ function theme_tableselect($element) {
   $header = $element['#header'];
   if (!empty($element['#options'])) {
     // Generate a table row for each selectable item in #options.
-    foreach ($element['#options'] as $key => $value) {
+    foreach (element_children($element) as $key) {
       $row = array();
 
       $row['data'] = array();
-      if (isset($value['#attributes'])) {
-        $row += $value['#attributes'];
+      if (isset($element['#options'][$key]['#attributes'])) {
+        $row += $element['#options'][$key]['#attributes'];
       }
 
       // Render the checkbox / radio element.
-      unset($element[$key]['#printed']); // NEW
+      $element[$key]['#printed'] = NULL;
       $row['data'][] = drupal_render($element[$key]);
 
       // As theme_table only maps header and row columns by order, create the
@@ -382,13 +380,36 @@ function theme_tableselect($element) {
     }
     // Add an empty header or a "Select all" checkbox to provide room for the
     // checkboxes/radios in the first table column.
-    $first_col = $element['#js_select'] ? array(theme('table_select_header_cell')) : array('');
-    $header = array_merge($first_col, $element['#header']);
+    if ($element['#js_select']) {
+      // Add a "Select all" checkbox.
+      //drupal_add_js('misc/tableselect.js');
+      //array_unshift($header, array('class' => 'select-all'));
+      array_unshift($header, theme('table_select_header_cell'));
+    }
+    else {
+      // Add an empty header when radio buttons are displayed or a "Select all"
+      // checkbox is not desired.
+      array_unshift($header, '');
+    }
   }
-  elseif ($element['#empty']) {
-    // If there are no selectable options, display the empty text over the
-    // entire width of the table.
-    $rows[] = array(array('data' => $element['#empty'], 'colspan' => count($header)));
+
+  // Add the 'empty' row message if available.
+  if (!count($rows) && $element['#empty']) {
+    $header_count = 0;
+    foreach ($header as $header_cell) {
+      if (is_array($header_cell)) {
+        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+      }
+      else {
+        $header_count++;
+      }
+    }
+    $rows[] = array(array(
+      'data' => $element['#empty'],
+      'colspan' => $header_count,
+      'class' => 'empty message',
+    ));
   }
-  return theme('table', $header, $rows);
+
+  return theme('table', $header, $rows, $element['#attributes']);
 }
