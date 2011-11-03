@@ -61,6 +61,9 @@ function elements_elements() {
   $types['textarea'] = array(
     '#process' => array('form_process_placeholder'),
   );
+  $types['password'] = array(
+    '#process' => array('form_process_placeholder'),
+  );
   return $types;
 }
 
