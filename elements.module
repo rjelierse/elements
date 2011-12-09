@@ -4,103 +4,113 @@
  * Implements hook_elements().
  */
 function elements_elements() {
-  $types['tableselect'] = array(
-    '#input' => TRUE,
-    '#js_select' => TRUE,
-    '#multiple' => TRUE,
-    '#process' => array('form_process_tableselect'),
-    '#options' => array(),
-    '#empty' => '',
-  );
-  $types['emailfield'] = array(
-    '#input' => TRUE,
-    '#size' => 60,
-    '#maxlength' => 128,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  $types['searchfield'] = array(
-    '#input' => TRUE,
-    '#size' => 60,
-    '#maxlength' => 128,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  $types['telfield'] = array(
-    '#input' => TRUE,
-    '#size' => 20,
-    '#maxlength' => 64,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  $types['urlfield'] = array(
-    '#input' => TRUE,
-    '#size' => 80,
-    '#maxlength' => 128,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  $types['numberfield'] = array(
-    '#input' => TRUE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  $types['rangefield'] = array(
-    '#input' => TRUE,
-    '#process' => array('form_expand_ahah'),
-    '#value_callback' => 'form_type_textfield_value',
-  );
-  // Add placeholder support to textfields and textareas.
-  $types['textfield'] = array(
-    '#process' => array('form_process_placeholder'),
-  );
-  $types['textarea'] = array(
-    '#process' => array('form_process_placeholder'),
-  );
-  $types['password'] = array(
-    '#process' => array('form_process_placeholder'),
-  );
-  return $types;
+    $types['tableselect'] = array(
+        '#input' => TRUE,
+        '#js_select' => TRUE,
+        '#multiple' => TRUE,
+        '#process' => array('form_process_tableselect'),
+        '#options' => array(),
+        '#empty' => '',
+    );
+    $types['emailfield'] = array(
+        '#input' => TRUE,
+        '#size' => 60,
+        '#maxlength' => 128,
+        '#autocomplete_path' => FALSE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    $types['searchfield'] = array(
+        '#input' => TRUE,
+        '#size' => 60,
+        '#maxlength' => 128,
+        '#autocomplete_path' => FALSE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    $types['telfield'] = array(
+        '#input' => TRUE,
+        '#size' => 20,
+        '#maxlength' => 64,
+        '#autocomplete_path' => FALSE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    $types['urlfield'] = array(
+        '#input' => TRUE,
+        '#size' => 80,
+        '#maxlength' => 128,
+        '#autocomplete_path' => FALSE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    $types['numberfield'] = array(
+        '#input' => TRUE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    $types['rangefield'] = array(
+        '#input' => TRUE,
+        '#process' => array('form_expand_ahah'),
+        '#value_callback' => 'form_type_textfield_value',
+    );
+    // Add placeholder support to textfields and textareas.
+    $types['textfield'] = array(
+        '#process' => array('form_process_placeholder'),
+    );
+    $types['textarea'] = array(
+        '#process' => array('form_process_placeholder'),
+    );
+    $types['password'] = array(
+        '#process' => array('form_process_placeholder'),
+    );
+    // Other fields
+    $types['datetime'] = array(
+        '#input' => TRUE,
+        '#process' => array('expand_datetime'),
+        '#validate' => 'datetime_validate'
+    );
+    return $types;
 }
 
 /**
  * Implements hook_theme().
  */
 function elements_theme() {
-  return array(
-    'tableselect' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'emailfield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'searchfield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'telfield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'urlfield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'numberfield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-    'rangefield' => array(
-      'arguments' => array('element' => NULL),
-      'file' => 'elements.theme.inc',
-    ),
-  );
+    return array(
+        'tableselect' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'emailfield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'searchfield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'telfield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'urlfield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'numberfield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'rangefield' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'datetime' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+    );
 }
 
 /**
@@ -114,22 +124,22 @@ function elements_theme() {
  *   has no autocompletion enabled.
  */
 function elements_add_autocomplete(&$element) {
-  $output = '';
+    $output = '';
 
-  if (!empty($element['#autocomplete_path']) && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
-    drupal_add_js('misc/autocomplete.js');
-    $element['#attributes']['class'] .= ' form-autocomplete';
+    if (!empty($element['#autocomplete_path']) && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
+        drupal_add_js('misc/autocomplete.js');
+        $element['#attributes']['class'] .= ' form-autocomplete';
 
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'] = 'autocomplete';
-    $output = '<input' . drupal_attributes($attributes) . ' />';
-  }
+        $attributes = array();
+        $attributes['type'] = 'hidden';
+        $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+        $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+        $attributes['disabled'] = 'disabled';
+        $attributes['class'] = 'autocomplete';
+        $output = '<input' . drupal_attributes($attributes) . ' />';
+    }
 
-  return $output;
+    return $output;
 }
 
 /**
@@ -142,12 +152,12 @@ function elements_add_autocomplete(&$element) {
  *   The processed element.
  */
 function form_process_placeholder($element) {
-  if (isset($element['#placeholder']) && !isset($element['#attributes']['placeholder'])) {
-    // If the placeholder FAPI property is set, simply add it to the form's
-    // attributes so it will be output in the HTML tag.
-    $element['#attributes']['placeholder'] = $element['#placeholder'];
-  }
-  return $element;
+    if (isset($element['#placeholder']) && !isset($element['#attributes']['placeholder'])) {
+        // If the placeholder FAPI property is set, simply add it to the form's
+        // attributes so it will be output in the HTML tag.
+        $element['#attributes']['placeholder'] = $element['#placeholder'];
+    }
+    return $element;
 }
 
 /**
@@ -165,16 +175,16 @@ function form_process_placeholder($element) {
  *   sufficient and no property name needs to be specified.
  */
 function element_set_attributes(array &$element, array $map) {
-  foreach ($map as $property => $attribute) {
-    // If the key is numeric, the attribute name needs to be taken over.
-    if (is_int($property)) {
-      $property = '#' . $attribute;
+    foreach ($map as $property => $attribute) {
+        // If the key is numeric, the attribute name needs to be taken over.
+        if (is_int($property)) {
+            $property = '#' . $attribute;
+        }
+        // Do not overwrite already existing attributes.
+        if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
+            $element['#attributes'][$attribute] = $element[$property];
+        }
     }
-    // Do not overwrite already existing attributes.
-    if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
-      $element['#attributes'][$attribute] = $element[$property];
-    }
-  }
 }
 
 /**
@@ -187,60 +197,150 @@ function element_set_attributes(array &$element, array $map) {
  *   The processed element.
  */
 function form_process_tableselect($element) {
-  if ($element['#multiple']) {
-    $value = is_array($element['#value']) ? $element['#value'] : array();
-  }
-  else {
-    // Advanced selection behaviour make no sense for radios.
-    $element['#js_select'] = FALSE;
-  }
-
-  $element['#tree'] = TRUE;
-
-  if (count($element['#options']) > 0) {
-    if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
-      $element['#default_value'] = array();
+    if ($element['#multiple']) {
+        $value = is_array($element['#value']) ? $element['#value'] : array();
+    }
+    else {
+        // Advanced selection behaviour make no sense for radios.
+        $element['#js_select'] = FALSE;
     }
 
-    // Create a checkbox or radio for each item in #options in such a way that
-    // the value of the tableselect element behaves as if it had been of type
-    // checkboxes or radios.
-    foreach ($element['#options'] as $key => $choice) {
-      // Do not overwrite manually created children.
-      if (!isset($element[$key])) {
-        if ($element['#multiple']) {
-          $element[$key] = array(
-            '#type' => 'checkbox',
-            '#title' => '',
-            '#return_value' => $key,
-            '#default_value' => isset($value[$key]),
-            '#attributes' => $element['#attributes'],
-            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
-          );
+    $element['#tree'] = TRUE;
+
+    if (count($element['#options']) > 0) {
+        if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
+            $element['#default_value'] = array();
         }
-        else {
-          // Generate the parents as the autogenerator does, so we will have a
-          // unique id for each radio button.
-          $parents_for_id = array_merge($element['#parents'], array($key));
-          $element[$key] = array(
-            '#type' => 'radio',
-            '#title' => '',
-            '#return_value' => $key,
-            '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
-            '#attributes' => $element['#attributes'],
-            '#parents' => $element['#parents'],
-            '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
-            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
-          );
+
+        // Create a checkbox or radio for each item in #options in such a way that
+        // the value of the tableselect element behaves as if it had been of type
+        // checkboxes or radios.
+        foreach ($element['#options'] as $key => $choice) {
+            // Do not overwrite manually created children.
+            if (!isset($element[$key])) {
+                if ($element['#multiple']) {
+                    $element[$key] = array(
+                        '#type' => 'checkbox',
+                        '#title' => '',
+                        '#return_value' => $key,
+                        '#default_value' => isset($value[$key]),
+                        '#attributes' => $element['#attributes'],
+                        '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+                    );
+                }
+                else {
+                    // Generate the parents as the autogenerator does, so we will have a
+                    // unique id for each radio button.
+                    $parents_for_id = array_merge($element['#parents'], array($key));
+                    $element[$key] = array(
+                        '#type' => 'radio',
+                        '#title' => '',
+                        '#return_value' => $key,
+                        '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
+                        '#attributes' => $element['#attributes'],
+                        '#parents' => $element['#parents'],
+                        '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+                        '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+                    );
+                }
+                if (isset($element['#options'][$key]['#weight'])) {
+                    $element[$key]['#weight'] = $element['#options'][$key]['#weight'];
+                }
+            }
         }
-        if (isset($element['#options'][$key]['#weight'])) {
-          $element[$key]['#weight'] = $element['#options'][$key]['#weight'];
-        }
-      }
     }
-  }
-  else {
-    $element['#value'] = array();
-  }
-  return $element;
+    else {
+        $element['#value'] = array();
+    }
+    return $element;
+}
+
+/**
+ * Expande the datetime element to the respective form elements for each field.
+ *
+ * @param array $element
+ *     The datetime element.
+ *
+ * @return array
+ *     The expanded datetime element.
+ */
+function expand_datetime($element) {
+    // Check for AM/PM requirement
+    $format = variable_get('date_format_short', 'm/d/Y - H:i');
+    $ampm = (strpos($format, 'a') || strpos($format, 'A'));
+
+    // Prepare default values
+    if (empty($element['#value'])) {
+        $element['#value'] = array(
+            'hour' => format_date(time(), 'custom', 'G'),
+            'minute' => format_date(time(), 'custom', 'i'),
+            'day' => format_date(time(), 'custom', 'j'),
+            'month' => format_date(time(), 'custom', 'n'),
+            'year' => format_date(time(), 'custom', 'Y'),
+        );
+
+        if ($ampm) {
+            $element['#value']['ampm'] = format_date(time(), 'custom', 'A');
+            $element['#value']['hour'] = format_date(time(), 'custom', 'g');
+        }
+    }
+
+    // Add date fields
+    $element = expand_date($element);
+
+    // Hour select
+    $element['hour'] = array(
+        '#type' => 'select',
+        '#attributes' => $element['#attributes'],
+        '#value' => $element['#value']['hour'],
+        '#options' => drupal_map_assoc(($ampm) ? range(1, 12) : range(0, 23))
+    );
+
+    // Minute select
+    $options = array();
+    for ($i = 0; $i < 60; $i++) {
+        $key = $value = sprintf('%02d', $i);
+        $options[$key] = $value;
+    }
+    $element['minute'] = array(
+        '#type' => 'select',
+        '#attributes' => $element['#attributes'],
+        '#value' => $element['#value']['minute'],
+        '#options' => $options
+    );
+
+    // Add AM/PM select if required
+    if ($ampm) {
+        $element['ampm'] = array(
+            '#type' => 'select',
+            '#attributes' => $element['#attributes'],
+            '#value' => $element['#values']['ampm'],
+            '#options' => drupal_map_assoc(array('AM', 'PM'))
+        );
+    }
+
+    return $element;
+}
+
+/**
+ * Convert values submitted through the datetime element to a UNIX timestamp.
+ *
+ * @param array $date
+ *     The values of the datetime element.
+ *
+ * @return int
+ *     The UNIX timestamp.
+ */
+function datetime_to_unix_timestamp($date) {
+    if ($date['ampm'] == 'AM' && $date['hour'] == 12) {
+        $hour = 0;
+    }
+    elseif ($date['ampm'] == 'PM' && $date['hour'] < 12) {
+        $hour = $date['hour'] + 12;
+    }
+    else {
+        $hour = $date['hour'];
+    }
+
+    return mktime($hour, $date['minute'], 0, $date['month'], $date['day'], $date['year']);
 }

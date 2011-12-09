@@ -13,3 +13,4 @@ Elements provided
 5. urlfield
 6. numberfield
 7. rangefield
+8. datetime

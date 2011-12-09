@@ -36,78 +36,78 @@
  * @ingroup themeable
  */
 function theme_tableselect($element) {
-  $rows = array();
-  $header = $element['#header'];
-  if (!empty($element['#options'])) {
-    // Generate a table row for each selectable item in #options.
-    foreach (element_children($element) as $key) {
-      $row = array();
+    $rows = array();
+    $header = $element['#header'];
+    if (!empty($element['#options'])) {
+        // Generate a table row for each selectable item in #options.
+        foreach (element_children($element) as $key) {
+            $row = array();
 
-      $row['data'] = array();
-      if (isset($element['#options'][$key]['#attributes'])) {
-        $row += $element['#options'][$key]['#attributes'];
-      }
+            $row['data'] = array();
+            if (isset($element['#options'][$key]['#attributes'])) {
+                $row += $element['#options'][$key]['#attributes'];
+            }
 
-      // Render the checkbox / radio element.
-      $element[$key]['#printed'] = NULL;  // Drupal 6 only
-      $row['data'][] = drupal_render($element[$key]);
+            // Render the checkbox / radio element.
+            $element[$key]['#printed'] = NULL; // Drupal 6 only
+            $row['data'][] = drupal_render($element[$key]);
 
-      // As theme_table only maps header and row columns by order, create the
-      // correct order by iterating over the header fields.
-      foreach ($element['#header'] as $fieldname => $title) {
-        $row['data'][] = $element['#options'][$key][$fieldname];
-      }
-      $rows[] = $row;
+            // As theme_table only maps header and row columns by order, create the
+            // correct order by iterating over the header fields.
+            foreach ($element['#header'] as $fieldname => $title) {
+                $row['data'][] = $element['#options'][$key][$fieldname];
+            }
+            $rows[] = $row;
+        }
+        // Add an empty header or a "Select all" checkbox to provide room for the
+        // checkboxes/radios in the first table column.
+        if ($element['#js_select']) {
+            // Add a "Select all" checkbox.
+            //drupal_add_js('misc/tableselect.js');
+            //array_unshift($header, array('class' => 'select-all'));
+            array_unshift($header, theme('table_select_header_cell')); // Drupal 6 only
+        }
+        else {
+            // Add an empty header when radio buttons are displayed or a "Select all"
+            // checkbox is not desired.
+            array_unshift($header, '');
+        }
     }
-    // Add an empty header or a "Select all" checkbox to provide room for the
-    // checkboxes/radios in the first table column.
-    if ($element['#js_select']) {
-      // Add a "Select all" checkbox.
-      //drupal_add_js('misc/tableselect.js');
-      //array_unshift($header, array('class' => 'select-all'));
-      array_unshift($header, theme('table_select_header_cell')); // Drupal 6 only
-    }
-    else {
-      // Add an empty header when radio buttons are displayed or a "Select all"
-      // checkbox is not desired.
-      array_unshift($header, '');
-    }
-  }
 
-  // Add the 'empty' row message if available.
-  if (!count($rows) && $element['#empty']) {
-    $header_count = 0;
-    foreach ($header as $header_cell) {
-      if (is_array($header_cell)) {
-        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
-      }
-      else {
-        $header_count++;
-      }
+    // Add the 'empty' row message if available.
+    if (!count($rows) && $element['#empty']) {
+        $header_count = 0;
+        foreach ($header as $header_cell) {
+            if (is_array($header_cell)) {
+                $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+            }
+            else {
+                $header_count++;
+            }
+        }
+        $rows[] = array(array(
+                            'data' => $element['#empty'],
+                            'colspan' => $header_count,
+                            'class' => 'empty message',
+                        ));
     }
-    $rows[] = array(array(
-      'data' => $element['#empty'],
-      'colspan' => $header_count,
-      'class' => 'empty message',
-    ));
-  }
 
-  return theme('table', $header, $rows, $element['#attributes']);
+    return theme('table', $header, $rows, $element['#attributes']);
 }
 
 /**
  * Wrapper for theming a form element to add field prefix and suffix support.
  */
 function _elements_theme_form_element_wrapper($element, $output) {
-  if (isset($element['#field_prefix'])) {
-    $output = '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' . $output;
-  }
+    if (isset($element['#field_prefix'])) {
+        $output = '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' . $output;
+    }
 
-  if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
-  }
+    if (isset($element['#field_suffix'])) {
+        $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
+    }
 
-  return theme('form_element', $element, $output);
+    return theme('form_element', $element, $output);
 }
 
 /**
@@ -121,15 +121,15 @@ function _elements_theme_form_element_wrapper($element, $output) {
  * @ingroup themeable
  */
 function theme_emailfield($element) {
-  $element['#attributes']['type'] = 'email';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text', 'form-email'));
+    $element['#attributes']['type'] = 'email';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+    _form_set_class($element, array('form-text', 'form-email'));
 
-  $extra = elements_add_autocomplete($element);
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $extra = elements_add_autocomplete($element);
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+    return $output;
 }
 
 /**
@@ -143,15 +143,15 @@ function theme_emailfield($element) {
  * @ingroup themeable
  */
 function theme_searchfield($element) {
-  $element['#attributes']['type'] = 'search';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text', 'form-search'));
+    $element['#attributes']['type'] = 'search';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+    _form_set_class($element, array('form-text', 'form-search'));
 
-  $extra = elements_add_autocomplete($element);
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $extra = elements_add_autocomplete($element);
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+    return $output;
 }
 
 /**
@@ -165,15 +165,15 @@ function theme_searchfield($element) {
  * @ingroup themeable
  */
 function theme_telfield($element) {
-  $element['#attributes']['type'] = 'tel';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text', 'form-tel'));
+    $element['#attributes']['type'] = 'tel';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+    _form_set_class($element, array('form-text', 'form-tel'));
 
-  $extra = elements_add_autocomplete($element);
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $extra = elements_add_autocomplete($element);
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+    return $output;
 }
 
 /**
@@ -187,15 +187,15 @@ function theme_telfield($element) {
  * @ingroup themeable
  */
 function theme_urlfield($element) {
-  $element['#attributes']['type'] = 'url';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text', 'form-url'));
+    $element['#attributes']['type'] = 'url';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+    _form_set_class($element, array('form-text', 'form-url'));
 
-  $extra = elements_add_autocomplete($element);
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $extra = elements_add_autocomplete($element);
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output . $extra);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output . $extra);
+    return $output;
 }
 
 /**
@@ -209,14 +209,14 @@ function theme_urlfield($element) {
  * @ingroup themeable
  */
 function theme_numberfield($element) {
-  $element['#attributes']['type'] = 'number';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
-  _form_set_class($element, array('form-text', 'form-number'));
+    $element['#attributes']['type'] = 'number';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
+    _form_set_class($element, array('form-text', 'form-number'));
 
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output);
+    return $output;
 }
 
 /**
@@ -230,12 +230,25 @@ function theme_numberfield($element) {
  * @ingroup themeable
  */
 function theme_rangefield($element) {
-  $element['#attributes']['type'] = 'range';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
-  _form_set_class($element, array('form-text', 'form-range'));
+    $element['#attributes']['type'] = 'range';
+    element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
+    _form_set_class($element, array('form-text', 'form-range'));
 
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+    $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
-  $output = _elements_theme_form_element_wrapper($element, $output);
-  return $output;
+    $output = _elements_theme_form_element_wrapper($element, $output);
+    return $output;
+}
+
+/**
+ * Returns HTML for a datetime form element.
+ * 
+ * @param array $element
+ *     An associative array containing the properties of the element.
+ *
+ * @return string
+ *     The rendered HTML.
+ */
+function theme_datetime($element) {
+    return theme('form_element', $element, '<div class="container-inline">' . $element['#children'] . '</div>');
 }
