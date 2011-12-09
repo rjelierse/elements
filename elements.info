@@ -2,3 +2,4 @@ name = Elements
 description = Provides a library of Form API elements.
 core = 6.x
 version = 6.x-1.3
+project status url = http://dev.sparse.nl/release-history
