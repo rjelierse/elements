@@ -1,5 +1,4 @@
 name = Elements
 description = Provides a library of Form API elements.
 core = 6.x
-files[] = elements.module
-files[] = elements.theme.inc
+version = 6.x-1.2
