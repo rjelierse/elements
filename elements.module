@@ -70,6 +70,9 @@ function elements_elements() {
         '#process' => array('expand_datetime'),
         '#validate' => 'datetime_validate'
     );
+    $types['section'] = array(
+        '#input' => FALSE,
+    );
     return $types;
 }
 
@@ -107,6 +110,10 @@ function elements_theme() {
             'file' => 'elements.theme.inc',
         ),
         'datetime' => array(
+            'arguments' => array('element' => NULL),
+            'file' => 'elements.theme.inc',
+        ),
+        'section' => array(
             'arguments' => array('element' => NULL),
             'file' => 'elements.theme.inc',
         ),

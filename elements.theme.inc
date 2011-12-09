@@ -252,3 +252,29 @@ function theme_rangefield($element) {
 function theme_datetime($element) {
     return theme('form_element', $element, '<div class="container-inline">' . $element['#children'] . '</div>');
 }
+
+/**
+ * Returns HTML for a section element.
+ *
+ * @param array $element
+ *     An associative array containing the properties of the element.
+ *
+ * @return string
+ *     The rendered HTML.
+ */
+function theme_section($element) {
+  _form_set_class($element, array('section'));
+  $output  = '<div' . drupal_attributes($element['#attributes']) . '>';
+  if ($element['#title']) {
+    $output .= '<h3>'. $element['#title'] .'</h3>';
+  }
+  if ($element['#children']) {
+    $output .= $element['#children'];
+  }
+  if ($element['#value']) {
+    $output .= $element['#value'];
+  }
+  $output .= "</div>\n";
+
+  return $output;
+}

@@ -14,3 +14,4 @@ Elements provided
 6. numberfield
 7. rangefield
 8. datetime
+9. section
